@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>化工吨桶 IBC 1000L · 三维模型</title>
+<title>化工设备三维模型库 · Chemical Equipment 3D Library</title>
 <style>
   :root { --ink:#1b2430; --accent:#0e62d6; }
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -11,65 +11,56 @@
   body { font-family:"PingFang SC","Microsoft YaHei",-apple-system,"Segoe UI",sans-serif; color:var(--ink); }
   #app { position:fixed; inset:0; }
   canvas { display:block; }
-
-  .card { position:fixed; background:rgba(255,255,255,.72); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  .card { position:fixed; background:rgba(255,255,255,.74); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
           border:1px solid rgba(255,255,255,.65); box-shadow:0 8px 28px rgba(20,35,60,.12); border-radius:14px; }
-
-  #title { top:18px; left:18px; padding:14px 18px; max-width:340px; }
-  #title h1 { font-size:17px; font-weight:700; letter-spacing:.5px; display:flex; align-items:center; gap:8px; }
+  #title { top:16px; left:16px; padding:12px 16px; z-index:10; }
+  #title h1 { font-size:16px; font-weight:700; letter-spacing:.5px; display:flex; align-items:center; gap:8px; }
   #title h1 .dot { width:9px; height:9px; border-radius:3px; background:var(--accent); box-shadow:0 0 0 4px rgba(14,98,214,.15); }
-  #title p { font-size:11.5px; color:#5a6b80; margin-top:5px; letter-spacing:.3px; }
-
-  #panel { top:18px; right:18px; padding:12px; width:196px; }
+  #title p { font-size:11px; color:#5a6b80; margin-top:4px; letter-spacing:.3px; }
+  #nav { top:16px; left:16px; margin-top:64px; padding:10px; width:172px; z-index:9; }
+  #nav button { display:flex; width:100%; text-align:left; margin-bottom:6px; padding:9px 10px; border-radius:10px;
+    border:1px solid transparent; background:transparent; font-size:12.5px; justify-content:space-between; align-items:center; }
+  #nav button small { color:#8b99ac; font-size:10px; }
+  #nav button:hover { background:rgba(14,98,214,.06); }
+  #nav button.on { background:var(--accent); color:#fff; }
+  #nav button.on small { color:rgba(255,255,255,.7); }
+  #panel { top:16px; right:16px; padding:12px; width:190px; z-index:10; }
   #panel .row { display:flex; gap:8px; margin-bottom:8px; }
-  #panel .row:last-child { margin-bottom:0; }
   #panel .cap { font-size:10.5px; color:#8393a8; letter-spacing:2px; margin:2px 2px 8px; }
-  button { flex:1; border:1px solid rgba(120,140,170,.35); background:rgba(255,255,255,.85); color:#2a3950;
-           font-size:12px; padding:7px 6px; border-radius:9px; cursor:pointer; transition:all .15s; font-family:inherit; }
-  button:hover { background:#fff; border-color:var(--accent); color:var(--accent); transform:translateY(-1px); }
-  button.on { background:var(--accent); border-color:var(--accent); color:#fff; }
+  button.act, a.btn { flex:1; border:1px solid rgba(120,140,170,.35); background:rgba(255,255,255,.85); color:#2a3950;
+           font-size:12px; padding:7px 6px; border-radius:9px; cursor:pointer; transition:all .15s; font-family:inherit; text-align:center; text-decoration:none; }
+  button.act:hover, a.btn:hover { background:#fff; border-color:var(--accent); color:var(--accent); }
+  button.act.on { background:var(--accent); border-color:var(--accent); color:#fff; }
   #exportBtn { background:#123c2f; color:#eaf6f0; border-color:#123c2f; font-weight:600; letter-spacing:1px; }
   #exportBtn:hover { background:#186a4c; color:#fff; }
   #status { font-size:11px; color:#3f8f65; text-align:center; margin-top:8px; height:14px; }
-
-  #spec { bottom:18px; left:18px; padding:10px 16px; font-size:11.5px; color:#42536b; letter-spacing:.4px; }
-  #spec b { color:#16222f; font-weight:600; }
-  #hint { position:fixed; bottom:20px; right:22px; font-size:11px; color:#8b99ac; letter-spacing:1px; }
-  @media (max-width:720px){ #panel{width:150px} #title{max-width:250px} #spec{display:none} }
+  #spec { bottom:16px; left:16px; padding:10px 16px; font-size:11.5px; color:#42536b; letter-spacing:.3px; max-width:640px; line-height:1.7; }
+  #spec b { color:#16222f; }
+  #hint { position:fixed; bottom:18px; right:20px; font-size:11px; color:#8b99ac; letter-spacing:1px; }
+  @media (max-width:760px){ #panel{width:150px} #spec{display:none} #nav{width:140px} }
 </style>
 </head>
 <body>
 <div id="app"></div>
 
 <div class="card" id="title">
-  <h1><span class="dot"></span>化工吨桶 IBC-1000L</h1>
-  <p>复合中型散装容器 · HDPE 内胆 + 镀锌钢框架 · UN 31H1</p>
+  <h1><span class="dot"></span>化工设备三维模型库</h1>
+  <p>程序化建模 · 可交互 · 可导出 GLB</p>
 </div>
+<div class="card" id="nav"></div>
 
 <div class="card" id="panel">
   <div class="cap">显示</div>
   <div class="row">
-    <button id="btnRotate" class="on">自动旋转</button>
-    <button id="btnWire">线框</button>
-  </div>
-  <div class="cap" style="margin-top:10px">视角</div>
-  <div class="row">
-    <button id="vHero" class="on">透视</button>
-    <button id="vFront">正面</button>
-  </div>
-  <div class="row">
-    <button id="vSide">侧面</button>
-    <button id="vTop">顶部</button>
+    <button class="act" id="btnRotate">自动旋转</button>
+    <button class="act" id="btnWire">线框</button>
   </div>
   <div class="cap" style="margin-top:10px">导出</div>
-  <div class="row"><button id="exportBtn">⬇ 导出 GLB 模型</button></div>
-  <div class="row"><a href="ibc-tote-1000L.glb" download style="flex:1;text-align:center;font-size:11.5px;padding:6px;border-radius:9px;background:rgba(18,60,47,.08);color:#123c2f;text-decoration:none;border:1px dashed rgba(18,60,47,.4);">直接下载 GLB 文件 (2.1MB)</a></div>
+  <div class="row"><button class="act" id="exportBtn">⬇ 导出 GLB</button></div>
   <div id="status"></div>
 </div>
 
-<div class="card" id="spec">
-  外形 <b>1200 × 1000 × 1160 mm</b> · 内容积 <b>1000 L</b> · 自重 <b>≈ 62 kg</b> · 桶口 <b>DN150</b> · 放料阀 <b>DN50</b>
-</div>
+<div class="card" id="spec"></div>
 <div id="hint">拖拽旋转 · 滚轮缩放 · 右键平移</div>
 
 <script type="importmap">
@@ -86,7 +77,7 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 
-/* ================= 场景 ================= */
+/* ================= 渲染器 / 场景 ================= */
 const app = document.getElementById('app');
 const renderer = new THREE.WebGLRenderer({ antialias:true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -94,50 +85,44 @@ renderer.setSize(innerWidth, innerHeight);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.02;
+renderer.toneMappingExposure = 1.06;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 app.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-// 渐变背景
 {
   const c = document.createElement('canvas'); c.width = 4; c.height = 512;
   const g = c.getContext('2d');
   const gr = g.createLinearGradient(0,0,0,512);
-  gr.addColorStop(0,'#cfd9e4'); gr.addColorStop(.45,'#e7ecf2'); gr.addColorStop(1,'#f7f9fb');
+  gr.addColorStop(0,'#cfd9e4'); gr.addColorStop(.45,'#e7ecf2'); gr.addColorStop(1,'#eef2f6');
   g.fillStyle = gr; g.fillRect(0,0,4,512);
   const bg = new THREE.CanvasTexture(c); bg.colorSpace = THREE.SRGBColorSpace;
   scene.background = bg;
 }
-
-const camera = new THREE.PerspectiveCamera(34, innerWidth/innerHeight, 0.1, 60);
+const camera = new THREE.PerspectiveCamera(34, innerWidth/innerHeight, 0.1, 80);
 camera.position.set(2.35, 1.52, 3.15);
-
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 0.60, 0);
 controls.enableDamping = true; controls.dampingFactor = 0.07;
-controls.minDistance = 1.6; controls.maxDistance = 9;
+controls.minDistance = 1.0; controls.maxDistance = 18;
 controls.maxPolarAngle = Math.PI * 0.52;
 controls.autoRotate = true; controls.autoRotateSpeed = 1.0;
 
-// 环境光照
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-
 const key = new THREE.DirectionalLight(0xffffff, 2.1);
-key.position.set(2.6, 4.6, 2.2);
-key.castShadow = true;
+key.position.set(3.2, 5.5, 2.8); key.castShadow = true;
 key.shadow.mapSize.set(2048, 2048);
-key.shadow.camera.left=-1.7; key.shadow.camera.right=1.7;
-key.shadow.camera.top=1.9;  key.shadow.camera.bottom=-1.9;
-key.shadow.camera.near=1;   key.shadow.camera.far=12;
+key.shadow.camera.left=-3.2; key.shadow.camera.right=3.2;
+key.shadow.camera.top=3.4;  key.shadow.camera.bottom=-1.2;
+key.shadow.camera.near=1;   key.shadow.camera.far=16;
 key.shadow.bias = -0.00018; key.shadow.normalBias = 0.02; key.shadow.radius = 5;
 scene.add(key);
-const fill = new THREE.DirectionalLight(0xdfe8ff, 0.55); fill.position.set(-3, 2.2, -0.5); scene.add(fill);
-const rim  = new THREE.DirectionalLight(0xffffff, 0.7);  rim.position.set(-1.6, 3.0, -3.6); scene.add(rim);
+const fill = new THREE.DirectionalLight(0xdfe8ff, 0.55); fill.position.set(-3, 2.5, -0.5); scene.add(fill);
+const rim  = new THREE.DirectionalLight(0xffffff, 0.7);  rim.position.set(-2, 3.5, -4); scene.add(rim);
 scene.add(new THREE.AmbientLight(0xffffff, 0.12));
 
-/* ================= 材质 ================= */
+/* ================= 共享材质 ================= */
 function noiseRoughTex(base=0.30, vary=0.22, size=256){
   const c=document.createElement('canvas'); c.width=c.height=size;
   const g=c.getContext('2d'), img=g.createImageData(size,size), d=img.data;
@@ -147,274 +132,497 @@ function noiseRoughTex(base=0.30, vary=0.22, size=256){
   const t=new THREE.CanvasTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(3,3); return t;
 }
 const MAT = {
-  galv:  new THREE.MeshStandardMaterial({ color:0xb7c1c9, metalness:0.88, roughness:0.36, roughnessMap:noiseRoughTex(0.3,0.25), envMapIntensity:1.1 }),
-  galvDark: new THREE.MeshStandardMaterial({ color:0x99a3ab, metalness:0.85, roughness:0.44, roughnessMap:noiseRoughTex(0.36,0.3), envMapIntensity:0.9 }),
+  galv:  new THREE.MeshStandardMaterial({ color:0xc2ccd4, metalness:0.74, roughness:0.34, roughnessMap:noiseRoughTex(0.26,0.2), envMapIntensity:1.35 }),
+  galvDark: new THREE.MeshStandardMaterial({ color:0xa5afb7, metalness:0.7, roughness:0.42, roughnessMap:noiseRoughTex(0.32,0.24), envMapIntensity:1.15 }),
+  ss:    new THREE.MeshStandardMaterial({ color:0xe8edf1, metalness:0.66, roughness:0.3, roughnessMap:noiseRoughTex(0.24,0.16), envMapIntensity:1.7 }),
+  ssDim: new THREE.MeshStandardMaterial({ color:0xccd4da, metalness:0.6, roughness:0.4, roughnessMap:noiseRoughTex(0.3,0.2), envMapIntensity:1.35 }),
   hdpe:  new THREE.MeshPhysicalMaterial({ color:0xf4f5f0, metalness:0, roughness:0.46, clearcoat:0.08, clearcoatRoughness:0.6, envMapIntensity:0.5 }),
+  paintBlue: new THREE.MeshPhysicalMaterial({ color:0x1a5da8, metalness:0.25, roughness:0.34, clearcoat:0.65, clearcoatRoughness:0.25, envMapIntensity:0.9 }),
+  paintWhite:new THREE.MeshPhysicalMaterial({ color:0xe2e6df, metalness:0.1, roughness:0.42, clearcoat:0.4, clearcoatRoughness:0.4, envMapIntensity:0.75 }),
   black: new THREE.MeshStandardMaterial({ color:0x17181b, metalness:0.15, roughness:0.42, envMapIntensity:0.6 }),
   valve: new THREE.MeshStandardMaterial({ color:0x39404a, metalness:0.75, roughness:0.38, envMapIntensity:0.95 }),
   red:   new THREE.MeshStandardMaterial({ color:0xc22a24, metalness:0.12, roughness:0.5, envMapIntensity:0.6 }),
+  yellow:new THREE.MeshStandardMaterial({ color:0xf2a71b, metalness:0.15, roughness:0.5, envMapIntensity:0.7 }),
+  motor: new THREE.MeshStandardMaterial({ color:0x3a444e, metalness:0.6, roughness:0.42, envMapIntensity:0.9 }),
+  glass: new THREE.MeshPhysicalMaterial({ color:0x3a5a78, metalness:0, roughness:0.08, transmission:0.6, thickness:0.02, envMapIntensity:1 }),
   darkIn:new THREE.MeshStandardMaterial({ color:0x2b2f34, metalness:0.4, roughness:0.8 }),
 };
 
-/* ================= 标签贴图 ================= */
-function makeLabelTexture(){
-  const W=760, H=560, c=document.createElement('canvas'); c.width=W; c.height=H;
+/* ================= 通用铭牌贴图 ================= */
+function plateTex(title, lines, accent='#0e62d6', W=560, H=400){
+  const c=document.createElement('canvas'); c.width=W; c.height=H;
   const g=c.getContext('2d');
-  g.fillStyle='#f8f8f4'; g.fillRect(0,0,W,H);
-  g.strokeStyle='#c9cdd2'; g.lineWidth=3; g.strokeRect(14,14,W-28,H-28);
-  // 顶部色带
-  g.fillStyle='#0e62d6'; g.fillRect(14,14,W-28,74);
-  g.fillStyle='#fff'; g.font='700 40px "PingFang SC","Microsoft YaHei",sans-serif';
-  g.fillText('IBC 吨桶 · 1000 L', 40, 66);
-  // 菱形危险标志
-  const cx=W-140, cy=150, r=88;
-  g.save(); g.translate(cx,cy); g.rotate(Math.PI/4);
-  g.fillStyle='#f5821f'; g.fillRect(-r*0.72,-r*0.72,r*1.44,r*1.44);
-  g.strokeStyle='#222'; g.lineWidth=5; g.strokeRect(-r*0.72,-r*0.72,r*1.44,r*1.44);
-  g.restore();
-  g.fillStyle='#111'; g.font='700 44px sans-serif'; g.textAlign='center';
-  g.fillText('3', cx, cy+16); g.textAlign='left';
-  // 参数
-  g.fillStyle='#1a2430'; g.font='600 34px "PingFang SC",sans-serif';
-  g.fillText('UN 31H1 / Y1.8 / 150', 44, 160);
-  g.font='27px "PingFang SC",sans-serif'; g.fillStyle='#435062';
-  const lines=[
-    '内容器：HDPE 高密度聚乙烯',
-    '外框架：热镀锌钢管 · 钢制托盘',
-    '外形尺寸：1200 × 1000 × 1160 mm',
-    '自重 ≈ 62 kg    满载 ≈ 1062 kg',
-    '灌装口 DN150 · 放料阀 DN50 球阀',
-    '最大堆码：3 层 · 适用非危/III类包装'
-  ];
-  lines.forEach((t,i)=> g.fillText(t, 44, 224 + i*44));
-  // 条码
-  let x=44; g.fillStyle='#111';
-  const bar=()=>{ for(let i=0;i<46;i++){ const w=(i%3===0)?6:(i%3===1?2.5:4); if(i%2===0) g.fillRect(x, H-92, w, 56); x+=w+2.5; } };
-  bar();
-  g.font='22px monospace'; g.fillStyle='#333';
-  g.fillText('CN 31H1 1000L 2026', x+26, H-54);
-  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace;
-  t.anisotropy=8; return t;
+  g.fillStyle='#f6f7f3'; g.fillRect(0,0,W,H);
+  g.strokeStyle='#b9bfc6'; g.lineWidth=4; g.strokeRect(10,10,W-20,H-20);
+  g.fillStyle=accent; g.fillRect(10,10,W-20,64);
+  g.fillStyle='#fff'; g.font='700 34px "PingFang SC","Microsoft YaHei",sans-serif';
+  g.fillText(title, 32, 54);
+  g.fillStyle='#1a2430'; g.font='24px "PingFang SC",sans-serif';
+  lines.forEach((t,i)=> g.fillText(t, 32, 118+i*42));
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; t.anisotropy=8; return t;
 }
 
-/* ================= 工具 ================= */
-const tote = new THREE.Group(); tote.name='IBC_Tote_1000L';
-function add(geo, mat, x,y,z, opts={}){
-  const m = new THREE.Mesh(geo, mat);
-  m.position.set(x,y,z);
+/* ================= 建模工具 ================= */
+let ROOT=null; // 当前模型根
+function add(geo, mat, x=0,y=0,z=0, opts={}){
+  const m=new THREE.Mesh(geo,mat); m.position.set(x,y,z);
   m.castShadow=true; m.receiveShadow=true;
-  if(opts.ry) m.rotation.y=opts.ry;
-  if(opts.rx) m.rotation.x=opts.rx;
-  if(opts.rz) m.rotation.z=opts.rz;
-  if(opts.name) m.name=opts.name;
-  tote.add(m); return m;
+  if(opts.ry)m.rotation.y=opts.ry; if(opts.rx)m.rotation.x=opts.rx; if(opts.rz)m.rotation.z=opts.rz;
+  if(opts.sy)m.scale.y=opts.sy; if(opts.sx)m.scale.x=opts.sx; if(opts.sz)m.scale.z=opts.sz;
+  if(opts.name)m.name=opts.name;
+  ROOT.add(m); return m;
 }
-// 两点间圆管
-function tube(a, b, r, mat, seg=10){
+function tube(a,b,r,mat,seg=10){
   const v1=new THREE.Vector3(...a), v2=new THREE.Vector3(...b);
   const len=v1.distanceTo(v2);
-  const geo=new THREE.CylinderGeometry(r,r,len,seg);
-  const m=new THREE.Mesh(geo,mat);
+  const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,len,seg),mat);
   m.position.copy(v1).add(v2).multiplyScalar(0.5);
-  const dir=v2.clone().sub(v1).normalize();
-  m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir);
-  m.castShadow=true; m.receiveShadow=true; tote.add(m); return m;
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), v2.clone().sub(v1).normalize());
+  m.castShadow=true; m.receiveShadow=true; ROOT.add(m); return m;
 }
 const box=(w,h,d,r=0.006)=> r>0 ? new RoundedBoxGeometry(w,h,d,3,r) : new THREE.BoxGeometry(w,h,d);
-
-/* ================= 尺寸（米） ================= */
-const D = {
-  palletL:1.20, palletW:1.00, palletH:0.14,
-  cageL:1.16, cageW:0.96, postS:0.042,
-  cageTop:1.17,
-  vR:0.0115,           // 竖管半径
-  railR:0.0155,        // 横杆半径
-  bottleL:1.06, bottleW:0.86, bottleH:0.96, bottleY:0.14,
-};
-const hx = D.cageL/2, hz = D.cageW/2;          // 框架半宽 0.58 / 0.48
-const px = hx - D.postS/2, pz = hz - D.postS/2; // 立柱中心 0.559 / 0.459
-
-/* ---- 1. 钢托盘 ---- */
-{
-  const g = new THREE.Group(); g.name='Pallet';
-  // 顶板
-  add(box(1.20, 0.035, 1.00, 0.012), MAT.galvDark, 0, 0.1225, 0, {name:'pallet_top'});
-  // 侧墙（长边 z=±）
-  add(box(1.20, 0.105, 0.09, 0.008), MAT.galvDark, 0, 0.0525,  0.455);
-  add(box(1.20, 0.105, 0.09, 0.008), MAT.galvDark, 0, 0.0525, -0.455);
-  // 端部大块（x=±）
-  add(box(0.16, 0.105, 0.82, 0.008), MAT.galvDark,  0.52, 0.0525, 0);
-  add(box(0.16, 0.105, 0.82, 0.008), MAT.galvDark, -0.52, 0.0525, 0);
-  // 叉车孔隔墙（沿 z 走向的隧道，x=±0.19 / ±0.43）
-  for(const x of [-0.43,-0.19,0.19,0.43]) add(box(0.05,0.105,0.82,0.006), MAT.galvDark, x, 0.0525, 0);
-  // 叉孔内衬暗色（增强深度感）
-  add(box(0.22,0.085,0.80,0), MAT.darkIn,  0.31, 0.053, 0);
-  add(box(0.22,0.085,0.80,0), MAT.darkIn, -0.31, 0.053, 0);
-  // 立柱底座垫板
-  for(const sx of [-1,1]) for(const sz of [-1,1])
-    add(box(0.075,0.016,0.075,0.005), MAT.galv, sx*px, 0.148, sz*pz);
+const cyl=(rt,rb,h,seg=24)=> new THREE.CylinderGeometry(rt,rb,h,seg);
+function dome(r, sy=0.5, seg=32){ const m=new THREE.SphereGeometry(r,seg,18,0,Math.PI*2,0,Math.PI/2); m.scale(1,sy,1); return m; }
+// 径向接管（沿±x或±z伸出，带法兰）
+function nozzle(dir, x,y,z, r, len, mat=MAT.ss, fl=null){
+  const g=new THREE.Group();
+  const c=new THREE.Mesh(cyl(r,r,len,20),mat);
+  if(dir==='x') c.rotation.z=Math.PI/2; if(dir==='z') c.rotation.x=Math.PI/2;
+  c.castShadow=c.receiveShadow=true;
+  const off = dir==='x'?[len/2,0,0]:dir==='-x'?[-len/2,0,0]:[0,0,len/2];
+  c.position.set(x+off[0],y,z+off[2]); ROOT.add(c);
+  if(fl){ const f=new THREE.Mesh(cyl(fl,fl,0.018,24),mat);
+    if(dir==='x'||dir==='-x') f.rotation.z=Math.PI/2; else f.rotation.x=Math.PI/2;
+    const fo=dir==='x'?[len,0,0]:dir==='-x'?[-len,0,0]:[0,0,len];
+    f.position.set(x+fo[0],y,z+fo[2]); f.castShadow=true; ROOT.add(f);
+  }
+  return c;
 }
-
-/* ---- 2. 镀锌钢管框架 ---- */
-{
-  const yBot = 0.155, yTop = D.cageTop;
-  // 四角立柱
-  for(const sx of [-1,1]) for(const sz of [-1,1]){
-    add(box(D.postS, yTop-0.148, D.postS, 0.008), MAT.galv, sx*px, (0.148+yTop)/2+0.003, sz*pz, {name:'post'});
-    // 柱顶盖板 + 底部螺栓
-    add(box(D.postS+0.012, 0.012, D.postS+0.012, 0.004), MAT.galv, sx*px, yTop+0.006, sz*pz);
-    const bolt = new THREE.CylinderGeometry(0.008,0.008,0.014,8);
-    add(bolt, MAT.black, sx*px, 0.162, sz*pz);
-  }
-  // 周圈横杆高度（避开放料阀区 y≈0.235）
-  const rails = [0.34, 0.58, 0.82, 1.04];
-  const vx = 0.469; // 竖管所在面 z
-  for(const y of rails){
-    // 长边（z=±）完整横杆（阀门高度 0.18~0.30 已避开首层横杆 0.34）
-    tube([-px,y,vx],[px,y,vx], D.railR, MAT.galv);
-    tube([-px,y,-vx],[px,y,-vx], D.railR, MAT.galv);
-    // 短边（x=±）
-    tube([hx-0.011,y,-vx],[hx-0.011,y,vx], D.railR, MAT.galv);
-    tube([-hx+0.011,y,-vx],[-hx+0.011,y,vx], D.railR, MAT.galv);
-  }
-  // 顶部围框 + 横撑
-  tube([-px,yTop,vx],[px,yTop,vx], D.railR, MAT.galv);
-  tube([-px,yTop,-vx],[px,yTop,-vx], D.railR, MAT.galv);
-  tube([hx-0.011,yTop,-vx],[hx-0.011,yTop,vx], D.railR, MAT.galv);
-  tube([-hx+0.011,yTop,-vx],[-hx+0.011,yTop,vx], D.railR, MAT.galv);
-  tube([-0.33,yTop,-vx],[-0.33,yTop,vx], D.railR, MAT.galv);
-  tube([ 0.33,yTop,-vx],[ 0.33,yTop,vx], D.railR, MAT.galv);
-  // 竖向钢管（四立面网格）
-  for(let i=-5;i<=5;i++){ const x=i*0.10;
-    if(Math.abs(x)>px-0.03) continue;
-    tube([x,yBot,-vx],[x,yTop,-vx], D.vR, MAT.galv);          // -z 面
-    if(!(Math.abs(x-0.35)<0.09))                              // +z 面避开阀门
-      tube([x,yBot,vx],[x,yTop,vx], D.vR, MAT.galv);
-  }
-  for(let i=-4;i<=4;i++){ const z=i*0.105;
-    if(Math.abs(z)>pz-0.05) continue;
-    tube([ px+0.005,yBot,z],[ px+0.005,yTop,z], D.vR, MAT.galv); // +x 面
-    tube([-px-0.005,yBot,z],[-px-0.005,yTop,z], D.vR, MAT.galv); // -x 面
+function plate(mat_, w,h, tex, x,y,z, ry=0){
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),
+    new THREE.MeshStandardMaterial({map:tex,roughness:0.55,metalness:0,envMapIntensity:0.4,polygonOffset:true,polygonOffsetFactor:-1}));
+  m.position.set(x,y,z); m.rotation.y=ry; ROOT.add(m); return m;
+}
+// 法兰螺栓圈
+function boltRing(x,y,z,axis,R,n,r=0.009){
+  for(let i=0;i<n;i++){ const a=i/n*Math.PI*2;
+    const b=new THREE.Mesh(cyl(r,r,0.03,8),MAT.black);
+    if(axis==='x'){ b.position.set(x,y+Math.cos(a)*R,z+Math.sin(a)*R); b.rotation.z=Math.PI/2; }
+    else { b.position.set(x+Math.cos(a)*R,y,z+Math.sin(a)*R); b.rotation.x=Math.PI/2; }
+    b.castShadow=true; ROOT.add(b);
   }
 }
 
-/* ---- 3. HDPE 内胆 ---- */
-{
-  const g = new THREE.Group(); g.name='Bottle';
-  const bw = add(new RoundedBoxGeometry(D.bottleL, D.bottleH, D.bottleW, 5, 0.055), MAT.hdpe,
-                 0, D.bottleY + D.bottleH/2, 0, {name:'bottle_body'});
-  // 灌装口 DN150
-  add(new THREE.CylinderGeometry(0.105,0.115,0.045,28), MAT.hdpe, -0.16, 1.123, 0.06, {name:'fill_neck'});
-  add(new THREE.CylinderGeometry(0.100,0.100,0.020,32), MAT.black, -0.16, 1.148, 0.06, {name:'cap_base'});
-  const knurl = add(new THREE.CylinderGeometry(0.096,0.096,0.026,28), MAT.black, -0.16, 1.171, 0.06);
-  knurl.geometry.computeVertexNormals();
-  add(new THREE.CylinderGeometry(0.082,0.090,0.010,28), MAT.black, -0.16, 1.189, 0.06);
-  // 呼吸/取样口 DN50
-  add(new THREE.CylinderGeometry(0.050,0.058,0.040,24), MAT.hdpe, 0.30, 1.118, 0.20);
-  add(new THREE.CylinderGeometry(0.046,0.046,0.024,24), MAT.black, 0.30, 1.148, 0.20);
-  add(new THREE.CylinderGeometry(0.020,0.020,0.014,16), MAT.red, 0.30, 1.164, 0.20);
-  // 底部放料口凸台（内部暗托效果）
-  add(box(0.18,0.02,0.03,0.008), MAT.galvDark, 0.35, 0.155, 0.425);
-}
-
-/* ---- 4. DN50 放料阀 ---- */
-{
-  const g = new THREE.Group(); g.name='Valve';
-  const X=0.35, Y=0.235, Z0=0.43;
-  // 出料法兰座（贴瓶面）
-  add(new THREE.CylinderGeometry(0.062,0.068,0.022,26), MAT.valve, X, Y, Z0+0.011, {rx:Math.PI/2});
-  add(new THREE.CylinderGeometry(0.040,0.040,0.048,20), MAT.valve, X, Y, Z0+0.046, {rx:Math.PI/2});
-  // 阀体 + 两道法兰环
-  add(box(0.105,0.115,0.075,0.02), MAT.valve, X, Y, Z0+0.105, {name:'valve_body'});
-  add(new THREE.CylinderGeometry(0.055,0.055,0.014,24), MAT.galv, X, Y, Z0+0.075, {rx:Math.PI/2});
-  add(new THREE.CylinderGeometry(0.055,0.055,0.014,24), MAT.galv, X, Y, Z0+0.135, {rx:Math.PI/2});
-  // 红色手柄（沿 +x 侧向）
-  add(box(0.17,0.013,0.022,0.005), MAT.red, X+0.105, Y+0.062, Z0+0.105, {name:'handle'});
-  add(box(0.05,0.02,0.026,0.008), MAT.black, X+0.20, Y+0.062, Z0+0.105);
-  // 出口直管（沿 +z）→ 90° 弯肘 → 竖直向下
-  add(new THREE.CylinderGeometry(0.032,0.032,0.06,18), MAT.valve, X, Y, Z0+0.160, {rx:Math.PI/2});
+/* ============================================================
+   模型 1：IBC 吨桶 1000L
+============================================================ */
+function buildIBC(){
+  const D={palletL:1.20,palletW:1.00,palletH:0.14,cageL:1.16,cageW:0.96,postS:0.042,cageTop:1.17,
+           vR:0.0115,railR:0.0155,bottleL:1.06,bottleW:0.86,bottleH:0.96,bottleY:0.14};
+  const hx=D.cageL/2,hz=D.cageW/2,px=hx-D.postS/2,pz=hz-D.postS/2;
+  // 钢托盘
+  add(box(1.20,0.035,1.00,0.012),MAT.galvDark,0,0.1225,0,{name:'pallet_top'});
+  add(box(1.20,0.105,0.09,0.008),MAT.galvDark,0,0.0525,0.455);
+  add(box(1.20,0.105,0.09,0.008),MAT.galvDark,0,0.0525,-0.455);
+  add(box(0.16,0.105,0.82,0.008),MAT.galvDark,0.52,0.0525,0);
+  add(box(0.16,0.105,0.82,0.008),MAT.galvDark,-0.52,0.0525,0);
+  for(const x of [-0.43,-0.19,0.19,0.43]) add(box(0.05,0.105,0.82,0.006),MAT.galvDark,x,0.0525,0);
+  add(box(0.22,0.085,0.80,0),MAT.darkIn,0.31,0.053,0);
+  add(box(0.22,0.085,0.80,0),MAT.darkIn,-0.31,0.053,0);
+  for(const sx of[-1,1])for(const sz of[-1,1]) add(box(0.075,0.016,0.075,0.005),MAT.galv,sx*px,0.148,sz*pz);
+  // 钢管框架
+  const yBot=0.155,yTop=D.cageTop,vx=0.469;
+  for(const sx of[-1,1])for(const sz of[-1,1]){
+    add(box(D.postS,yTop-0.148,D.postS,0.008),MAT.galv,sx*px,(0.148+yTop)/2+0.003,sz*pz,{name:'post'});
+    add(box(D.postS+0.012,0.012,D.postS+0.012,0.004),MAT.galv,sx*px,yTop+0.006,sz*pz);
+    add(cyl(0.008,0.008,0.014,8),MAT.black,sx*px,0.162,sz*pz);
+  }
+  for(const y of [0.34,0.58,0.82,1.04]){
+    tube([-px,y,vx],[px,y,vx],D.railR,MAT.galv);
+    tube([-px,y,-vx],[px,y,-vx],D.railR,MAT.galv);
+    tube([hx-0.011,y,-vx],[hx-0.011,y,vx],D.railR,MAT.galv);
+    tube([-hx+0.011,y,-vx],[-hx+0.011,y,vx],D.railR,MAT.galv);
+  }
+  tube([-px,yTop,vx],[px,yTop,vx],D.railR,MAT.galv);
+  tube([-px,yTop,-vx],[px,yTop,-vx],D.railR,MAT.galv);
+  tube([hx-0.011,yTop,-vx],[hx-0.011,yTop,vx],D.railR,MAT.galv);
+  tube([-hx+0.011,yTop,-vx],[-hx+0.011,yTop,vx],D.railR,MAT.galv);
+  tube([-0.33,yTop,-vx],[-0.33,yTop,vx],D.railR,MAT.galv);
+  tube([0.33,yTop,-vx],[0.33,yTop,vx],D.railR,MAT.galv);
+  for(let i=-5;i<=5;i++){ const x=i*0.10; if(Math.abs(x)>px-0.03)continue;
+    tube([x,yBot,-vx],[x,yTop,-vx],D.vR,MAT.galv);
+    if(!(Math.abs(x-0.35)<0.09)) tube([x,yBot,vx],[x,yTop,vx],D.vR,MAT.galv);
+  }
+  for(let i=-4;i<=4;i++){ const z=i*0.105; if(Math.abs(z)>pz-0.05)continue;
+    tube([px+0.005,yBot,z],[px+0.005,yTop,z],D.vR,MAT.galv);
+    tube([-px-0.005,yBot,z],[-px-0.005,yTop,z],D.vR,MAT.galv);
+  }
+  // HDPE 内胆
+  add(new RoundedBoxGeometry(D.bottleL,D.bottleH,D.bottleW,5,0.055),MAT.hdpe,0,D.bottleY+D.bottleH/2,0,{name:'bottle'});
+  add(cyl(0.105,0.115,0.045,28),MAT.hdpe,-0.16,1.123,0.06,{name:'fill_neck'});
+  add(cyl(0.100,0.100,0.020,32),MAT.black,-0.16,1.148,0.06);
+  const kn=add(cyl(0.096,0.096,0.026,28),MAT.black,-0.16,1.171,0.06);
+  add(cyl(0.082,0.090,0.010,28),MAT.black,-0.16,1.189,0.06);
+  add(cyl(0.050,0.058,0.040,24),MAT.hdpe,0.30,1.118,0.20);
+  add(cyl(0.046,0.046,0.024,24),MAT.black,0.30,1.148,0.20);
+  add(cyl(0.020,0.020,0.014,16),MAT.red,0.30,1.164,0.20);
+  add(box(0.18,0.02,0.03,0.008),MAT.galvDark,0.35,0.155,0.425);
+  // DN50 放料阀
+  const X=0.35,Y=0.235,Z0=0.43;
+  add(cyl(0.062,0.068,0.022,26),MAT.valve,X,Y,Z0+0.011,{rx:Math.PI/2});
+  add(cyl(0.040,0.040,0.048,20),MAT.valve,X,Y,Z0+0.046,{rx:Math.PI/2});
+  add(box(0.105,0.115,0.075,0.02),MAT.valve,X,Y,Z0+0.105,{name:'valve_body'});
+  add(cyl(0.055,0.055,0.014,24),MAT.galv,X,Y,Z0+0.075,{rx:Math.PI/2});
+  add(cyl(0.055,0.055,0.014,24),MAT.galv,X,Y,Z0+0.135,{rx:Math.PI/2});
+  add(box(0.17,0.013,0.022,0.005),MAT.red,X+0.105,Y+0.062,Z0+0.105,{name:'handle'});
+  add(box(0.05,0.02,0.026,0.008),MAT.black,X+0.20,Y+0.062,Z0+0.105);
+  add(cyl(0.032,0.032,0.06,18),MAT.valve,X,Y,Z0+0.160,{rx:Math.PI/2});
   const R=0.042;
-  const elbow = new THREE.TorusGeometry(R,0.030,12,18,Math.PI/2);
-  add(elbow, MAT.valve, X, Y-R, Z0+0.145+R, {ry:-Math.PI/2}, );
-  add(new THREE.CylinderGeometry(0.030,0.030,0.105,18), MAT.valve, X, Y-R-0.0525+R, Z0+0.145+2*R);
-  add(new THREE.CylinderGeometry(0.036,0.036,0.015,18), MAT.galv, X, 0.112, Z0+0.145+2*R);
-}
-/* ---- 5. 危险品标签 ---- */
-{
-  const tex = makeLabelTexture();
-  const labelMat = new THREE.MeshStandardMaterial({ map:tex, roughness:0.55, metalness:0, envMapIntensity:0.4,
-    polygonOffset:true, polygonOffsetFactor:-1 });
-  const label = new THREE.Mesh(new THREE.PlaneGeometry(0.62,0.455), labelMat);
-  label.position.set(-0.02, 0.74, 0.4338); label.rotation.y=0; label.name='label'; label.castShadow=false;
-  tote.add(label);
-  const label2 = label.clone(); label2.rotation.y=Math.PI; label2.position.z=-0.4338;
-  tote.add(label2);
+  add(new THREE.TorusGeometry(R,0.030,12,18,Math.PI/2),MAT.valve,X,Y-R,Z0+0.145+R,{ry:-Math.PI/2});
+  add(cyl(0.030,0.030,0.105,18),MAT.valve,X,Y-0.0525,Z0+0.145+2*R);
+  add(cyl(0.036,0.036,0.015,18),MAT.galv,X,0.112,Z0+0.145+2*R);
+  // 标签
+  plate(MAT.hdpe,0.62,0.455,plateTex('IBC 吨桶 · 1000 L',[
+    'UN 31H1 / Y1.8 / 150','内容器：HDPE | 框架：镀锌钢',
+    '外形 1200×1000×1160 mm','自重 ≈ 62 kg  满载 ≈ 1062 kg',
+    '灌装口 DN150 · 放料阀 DN50']),-0.02,0.74,0.4338);
+  plate(MAT.hdpe,0.62,0.455,plateTex('IBC 吨桶 · 1000 L',[
+    'UN 31H1 / Y1.8 / 150','内容器：HDPE | 框架：镀锌钢',
+    '外形 1200×1000×1160 mm','自重 ≈ 62 kg  满载 ≈ 1062 kg',
+    '灌装口 DN150 · 放料阀 DN50']),-0.02,0.74,-0.4338,Math.PI);
 }
 
-scene.add(tote);
-tote.position.y = 0.001;
+/* ============================================================
+   模型 2：200L 闭口钢桶
+============================================================ */
+function buildDrum(){
+  const r=0.286, bodyH=0.80, y0=0.04;
+  add(cyl(r,r,bodyH,48),MAT.paintBlue,0,y0+bodyH/2,0,{name:'drum_body'});
+  // 上下卷边
+  add(new THREE.TorusGeometry(r-0.012,0.016,12,48),MAT.paintBlue,0,y0+bodyH,0,{rx:Math.PI/2});
+  add(new THREE.TorusGeometry(r-0.012,0.016,12,48),MAT.paintBlue,0,y0,0,{rx:Math.PI/2});
+  add(cyl(r-0.012,r-0.012,0.010,48),MAT.paintBlue,0,y0+bodyH+0.008,0);
+  add(cyl(r-0.012,r-0.012,0.010,48),MAT.paintBlue,0,y0-0.008,0);
+  // 滚压箍环
+  for(const y of [y0+0.16,y0+0.40,y0+0.64])
+    add(new THREE.TorusGeometry(r+0.006,0.011,10,48),MAT.paintBlue,0,y,0,{rx:Math.PI/2});
+  // 桶口：2" 大口 + 3/4" 小口
+  add(cyl(0.045,0.050,0.020,20),MAT.black,0.10,y0+bodyH+0.020,0,{name:'bung_large'});
+  add(cyl(0.030,0.034,0.016,16),MAT.black,-0.12,y0+bodyH+0.018,0.05);
+  add(box(0.07,0.008,0.018,0.003),MAT.black,0.10,y0+bodyH+0.032,0);
+  // 弧面标签（局部圆柱面）
+  const lg=new THREE.CylinderGeometry(r+0.0025,r+0.0025,0.42,48,1,true,-0.85,1.7);
+  const tex=plateTex('200L 钢桶 · 闭口桶',[
+    'UN 1A1/Y1.8/150','材质：冷轧钢板 T1.2mm',
+    '外形 Φ571×880 mm','内涂：酚醛环氧防腐',
+    '盛装：化工液体 ≤ 200L'],'#1a5da8');
+  const lab=new THREE.Mesh(lg,new THREE.MeshStandardMaterial({map:tex,roughness:0.5,metalness:0.1,envMapIntensity:0.5}));
+  lab.position.y=y0+0.40; lab.castShadow=true; ROOT.add(lab);
+}
+
+/* ============================================================
+   模型 3：立式储罐 8m³
+============================================================ */
+function buildVTank(){
+  const r=0.80, yB=0.35, h=2.30, yT=yB+h;   // 筒体
+  // 支腿 + 加强筋
+  for(let i=0;i<4;i++){
+    const a=Math.PI/4+i*Math.PI/2, cx=Math.cos(a), sz=Math.sin(a);
+    tube([cx*0.60,0,sz*0.60],[cx*0.60,yB+0.05,sz*0.60],0.045,MAT.ssDim);
+    add(box(0.16,0.016,0.16,0.005),MAT.ssDim,cx*0.60,0.008,sz*0.60);
+    add(box(0.14,0.10,0.012,0.004),MAT.ssDim,cx*0.685,yB+0.10,sz*0.685,{ry:-a});
+  }
+  tube([0.60,0.16,0.60],[-0.60,0.16,0.60],0.016,MAT.ssDim);   // 水平拉撑
+  tube([-0.60,0.16,0.60],[-0.60,0.16,-0.60],0.016,MAT.ssDim);
+  tube([-0.60,0.16,-0.60],[0.60,0.16,-0.60],0.016,MAT.ssDim);
+  tube([0.60,0.16,-0.60],[0.60,0.16,0.60],0.016,MAT.ssDim);
+  // 罐体
+  add(cyl(r,r,h,48),MAT.paintWhite,0,yB+h/2,0,{name:'shell'});
+  add(new THREE.TorusGeometry(r-0.008,0.018,12,48),MAT.paintWhite,0,yB,0,{rx:Math.PI/2});
+  add(cyl(r-0.005,r-0.005,0.014,48),MAT.paintWhite,0,yB-0.004,0);
+  const topD=add(dome(r,0.40),MAT.paintWhite,0,yT,0,{name:'roof'});
+  // 顶部人孔 + 铰链盖
+  add(cyl(0.26,0.28,0.05,32),MAT.ss,-0.30,yT+0.30,-0.10,{name:'manway'});
+  add(cyl(0.29,0.29,0.035,32),MAT.ss,-0.30,yT+0.335,-0.10);
+  add(cyl(0.16,0.20,0.05,24),MAT.ss,-0.30,yT+0.375,-0.10);
+  tube([-0.56,yT+0.34,-0.10],[-0.30,yT+0.36,-0.10],0.018,MAT.ss);
+  // 透气口（呼吸阀）+ 防雨帽
+  add(cyl(0.05,0.05,0.14,16),MAT.ss,0.42,yT+0.245,0.24);
+  add(new THREE.TorusGeometry(0.045,0.014,8,16),MAT.ss,0.42,yT+0.315,0.24);
+  add(cyl(0.10,0.06,0.03,20),MAT.ss,0.42,yT+0.335,0.24);
+  // 进料口（上侧向法兰）
+  nozzle('z',0.55,yT-0.22,0,0.06,0.14,MAT.ss,0.10); boltRing(0.55,yT-0.22,0.14,'z',0.082,8);
+  // 侧向人孔（下）
+  add(cyl(0.20,0.22,0.05,28),MAT.ss,0,yB+0.55,r-0.005,{rx:Math.PI/2,name:'side_manway'});
+  add(cyl(0.23,0.23,0.030,28),MAT.ss,0,yB+0.55,r+0.035,{rx:Math.PI/2});
+  add(new THREE.SphereGeometry(0.21,24,12),MAT.ss,0,yB+0.55,r+0.048,{sy:0.35});
+  boltRing(0,yB+0.55,r+0.052,'z',0.185,10,0.010);
+  // 出料口 + 蝶阀
+  nozzle('x',r-0.01,yB+0.18,0,0.07,0.16,MAT.ss,0.11);
+  add(cyl(0.09,0.09,0.06,20),MAT.valve,r+0.21,yB+0.18,0,{rz:Math.PI/2,name:'butterfly'});
+  add(box(0.14,0.016,0.03,0.005),MAT.red,r+0.28,yB+0.26,0,{rz:0.35});
+  // 液位计
+  for(const y of [yB+0.5,yB+1.3,yB+2.0]){
+    tube([r+0.02,y-0.04,0.42],[r+0.02,y+0.04,0.42],0.020,MAT.ssDim);
+  }
+  add(cyl(0.017,0.017,h-0.35,12),MAT.glass,r+0.02,yB+h/2,0.42,{name:'level_gauge'});
+  // 直爬梯 + 安全笼
+  const lz=-(r+0.16);
+  tube([-0.25,0.10,lz],[-0.25,yT+0.45,lz],0.016,MAT.galv);
+  tube([ 0.25,0.10,lz],[ 0.25,yT+0.45,lz],0.016,MAT.galv);
+  for(let y=0.25;y<=yT+0.40;y+=0.24) tube([-0.25,y,lz],[0.25,y,lz],0.011,MAT.galv);
+  tube([-0.25,0.10,lz],[-0.25,0.10,lz-0.10],0.014,MAT.galv);
+  tube([0.25,0.10,lz],[0.25,0.10,lz-0.10],0.014,MAT.galv);
+  for(let y=1.35;y<=yT+0.05;y+=0.45){
+    const hoop=new THREE.TorusGeometry(0.38,0.012,8,28,Math.PI*1.35);
+    add(hoop,MAT.galv,0,y,lz-0.02,{rx:Math.PI/2,ry:Math.PI*0.82});
+  }
+  for(const sx of[-0.30,0,0.30]) tube([sx,1.30,lz-0.335],[sx,yT+0.05,lz-0.335],0.010,MAT.galv);
+  plate(MAT.paintWhite,0.44,0.32,plateTex('立式储罐 8 m³',[
+    '设计压力：常压','设计温度：-10~80 ℃',
+    '材质：Q235-B 内衬 PE','尺寸 Φ1600×2600 mm',
+    '介质：化工液体']),0,yB+1.55,r+0.004);
+}
+
+/* ============================================================
+   模型 4：搅拌反应釜 500L
+============================================================ */
+function buildReactor(){
+  const r=0.55, yB=0.90, h=1.00, yT=yB+h;
+  // 三支腿（微外倾）
+  for(let i=0;i<3;i++){
+    const a=Math.PI/2+i*Math.PI*2/3, cx=Math.cos(a), sz=Math.sin(a);
+    tube([cx*0.38,yB-0.06,sz*0.38],[cx*0.56,0.02,sz*0.56],0.036,MAT.ssDim);
+    add(box(0.14,0.016,0.14,0.005),MAT.ssDim,cx*0.60,0.008,sz*0.60);
+    tube([cx*0.46,0.30,sz*0.46],[cx*0.46*Math.cos(2.094),0.30,sz*0.46*Math.cos(2.094)],0.014,MAT.ssDim);
+  }
+  // 夹套 + 夹套封头环
+  add(cyl(0.62,0.62,h*0.82,48),MAT.ss,0,yB+h*0.08+h*0.41,0,{name:'jacket'});
+  add(new THREE.TorusGeometry(0.615,0.020,12,48),MAT.ss,0,yB+h*0.90,0,{rx:Math.PI/2});
+  add(new THREE.TorusGeometry(0.615,0.020,12,48),MAT.ss,0,yB+h*0.08,0,{rx:Math.PI/2});
+  // 内筒可见段（上下露出）
+  add(cyl(r,r,h*0.10,48),MAT.ss,0,yT-h*0.05,0);
+  // 釜体上封头 + 下封头
+  add(dome(r,0.42),MAT.ss,0,yT,0,{name:'top_head'});
+  add(dome(r,0.42),MAT.ss,0,yB-h*0.08,0,{rx:Math.PI});
+  add(cyl(r,r,h*0.80,48),MAT.ss,0,yB+h*0.42,0,{name:'shell_inner'});
+  // 减速机 + 电机
+  add(cyl(0.15,0.17,0.10,28),MAT.motor,0,yT+0.236,0,{name:'gearbox'});
+  add(cyl(0.125,0.125,0.30,28),MAT.motor,0,yT+0.436,0,{name:'motor'});
+  add(dome(0.125,0.35,20),MAT.motor,0,yT+0.586,0);
+  add(box(0.09,0.06,0.12,0.008),MAT.black,0.14,yT+0.52,0);
+  add(cyl(0.02,0.02,0.025,12),MAT.black,0.14,yT+0.56,0.08);
+  tube([-0.13,yT+0.30,-0.10],[-0.13,yT+0.52,-0.10],0.016,MAT.ssDim);
+  // 上封头接管：人孔 / 视镜 / 进料 / 温度计
+  add(cyl(0.17,0.19,0.05,28),MAT.ss,0.24,yT+0.145,-0.05,{name:'manway'});
+  add(cyl(0.20,0.20,0.030,28),MAT.ss,0.24,yT+0.185,-0.05);
+  boltRing(0.24,yT+0.202,-0.05,'y',0.155,8);
+  const sg=add(cyl(0.065,0.075,0.05,20),MAT.ss,-0.13,yT+0.15,0.16);
+  add(cyl(0.045,0.045,0.016,20),MAT.glass,-0.13,yT+0.178,0.16);
+  nozzle('x',-0.42,yT+0.02,0.16,0.038,0.10,MAT.ss,0.062);
+  nozzle('z',-0.10,yT+0.10,0.44,0.030,0.09,MAT.ss,0.052);
+  // 夹套接管：蒸汽进口 / 凝水出口 / 放空
+  nozzle('x',0.62,yB+0.16,0,0.048,0.12,MAT.ss,0.075);
+  nozzle('x',0.62,yB+0.72,0,0.040,0.12,MAT.ss,0.065);
+  nozzle('z',0,0.72,0.62,0.025,0.09,MAT.ss,0.045);
+  // 底部卸料阀
+  add(cyl(0.062,0.062,0.14,20),MAT.ss,0,yB-0.19,0,{name:'discharge'});
+  add(cyl(0.088,0.088,0.055,20),MAT.valve,0,yB-0.285,0);
+  add(box(0.018,0.14,0.018,0.004),MAT.red,0.09,yB-0.285,0,{rz:0.5});
+  const R2=0.036;
+  add(new THREE.TorusGeometry(R2,0.024,10,14,Math.PI/2),MAT.valve,0,yB-0.322+R2,R2+0.033);
+  add(cyl(0.024,0.024,0.09,14),MAT.valve,0,yB-0.368,R2+0.033+R2);
+  // 吊耳
+  for(const sx of[-1,1]) add(box(0.05,0.12,0.16,0.015),MAT.ss,sx*0.50,yT+0.06,0);
+  plate(MAT.ss,0.34,0.26,plateTex('搅拌反应釜 500L',[
+    '设计压力 0.6 MPa(夹套)','设计温度 -19~200 ℃',
+    '材质 S30408','电机 2.2 kW · 锚式桨',
+    '尺寸 Φ1100×1500 mm'],'#8a5a12'),-0.55,yB+0.62,0.626);
+}
+
+/* ============================================================
+   模型 5：离心泵机组
+============================================================ */
+function buildPump(){
+  const yB=0.14; // 底座顶面
+  // 底座
+  add(box(1.30,0.14,0.55,0.02),MAT.paintBlue,0,0.07,0,{name:'baseplate'});
+  add(box(0.20,0.02,0.35,0.006),MAT.paintBlue,0,0.145,0);
+  for(const sx of[-0.55,0.55])for(const sz of[-0.18,0.18])
+    add(cyl(0.012,0.012,0.02,8),MAT.black,sx,0.155,sz);
+  const px=-0.28, mx=0.34; // 泵中心 / 电机中心
+  // 泵壳（蜗壳）
+  add(cyl(0.165,0.165,0.17,32),MAT.paintBlue,px,yB+0.24,0,{rz:Math.PI/2,name:'pump_casing'});
+  add(new THREE.TorusGeometry(0.105,0.082,14,32),MAT.paintBlue,px,yB+0.24,0,{ry:Math.PI/2});
+  add(cyl(0.175,0.175,0.03,32),MAT.paintBlue,px-0.09,yB+0.24,0,{rz:Math.PI/2});
+  // 吸入口（轴向）+ 出口（顶）
+  add(cyl(0.055,0.055,0.14,20),MAT.paintBlue,px-0.19,yB+0.24,0,{rz:Math.PI/2,name:'suction'});
+  add(cyl(0.085,0.085,0.02,24),MAT.paintBlue,px-0.26,yB+0.24,0,{rz:Math.PI/2});
+  boltRing(px-0.27,yB+0.24,0,'x',0.068,8);
+  add(cyl(0.048,0.048,0.16,20),MAT.paintBlue,px,yB+0.40,0,{name:'discharge'});
+  add(cyl(0.075,0.075,0.02,24),MAT.paintBlue,px,yB+0.48,0);
+  boltRing(px,yB+0.492,0,'z',0.058,8);
+  // 轴承体 + 支架
+  add(cyl(0.062,0.062,0.16,20),MAT.paintBlue,px+0.13,yB+0.24,0,{rz:Math.PI/2});
+  add(box(0.16,0.10,0.10,0.02),MAT.paintBlue,px+0.04,yB+0.10,0);
+  // 联轴器 + 黄色护罩
+  add(cyl(0.045,0.045,0.10,20),MAT.valve,0.0,yB+0.24,0,{rz:Math.PI/2,name:'coupling'});
+  const guard=new THREE.CylinderGeometry(0.082,0.082,0.20,24,1,true,0,Math.PI);
+  const gm=new THREE.Mesh(guard,MAT.yellow); gm.position.set(0.0,yB+0.265,0);
+  gm.rotation.z=Math.PI/2; gm.rotation.y=Math.PI/2; gm.castShadow=true; ROOT.add(gm);
+  // 电机（卧式）
+  add(cyl(0.14,0.14,0.34,20),MAT.motor,mx,yB+0.24,0,{rz:Math.PI/2,name:'motor'});
+  const mf=new THREE.Mesh(cyl(0.145,0.145,0.36,14),MAT.motor); mf.position.set(mx,yB+0.24,0); mf.rotation.z=Math.PI/2; mf.castShadow=true; ROOT.add(mf);
+  add(cyl(0.148,0.148,0.035,24),MAT.motor,mx-0.185,yB+0.24,0,{rz:Math.PI/2});
+  add(cyl(0.148,0.148,0.035,24),MAT.motor,mx+0.185,yB+0.24,0,{rz:Math.PI/2});
+  // 接线盒
+  add(box(0.12,0.07,0.10,0.012),MAT.black,mx+0.02,yB+0.37,0);
+  add(cyl(0.016,0.016,0.04,10),MAT.black,mx+0.02,yB+0.42,0.03);
+  // 电机脚
+  for(const sx of[-0.10,0.10]) add(box(0.14,0.06,0.22,0.015),MAT.motor,mx+sx,yB+0.03,0);
+  plate(MAT.motor,0.20,0.15,plateTex('离心泵 IH50-32-160',[
+    '流量 12.5 m³/h','扬程 32 m',
+    '电机 3 kW / 2900 rpm'],'#7a1010'),mx,yB+0.235,0.142);
+}
+
+/* ============================================================
+   模型 6：列管式换热器
+============================================================ */
+function buildHX(){
+  const r=0.20, L=1.70, cy=0.55, x0=-L/2;
+  // 壳体
+  add(cyl(r,r,L,40),MAT.ss,0,cy,0,{rz:Math.PI/2,name:'shell'});
+  // 前管箱 + 封头
+  add(cyl(0.215,0.215,0.16,40),MAT.ss,x0-0.10,cy,0,{rz:Math.PI/2,name:'channel'});
+  add(cyl(0.26,0.26,0.035,40),MAT.ss,x0-0.19,cy,0,{rz:Math.PI/2});
+  const fhead=add(new THREE.SphereGeometry(0.215,32,16),MAT.ss,x0-0.195,cy,0,{sy:0.75});
+  boltRing(x0-0.19,cy,0,'x',0.235,10);
+  add(cyl(0.215,0.215,0.035,40),MAT.ss,x0-0.028,cy,0,{rz:Math.PI/2});
+  boltRing(x0-0.028,cy,0,'x',0.235,10);
+  // 后管箱
+  add(cyl(0.215,0.215,0.10,40),MAT.ss,-x0+0.065,cy,0,{rz:Math.PI/2});
+  add(cyl(0.26,0.26,0.035,40),MAT.ss,-x0+0.028,cy,0,{rz:Math.PI/2});
+  boltRing(-x0+0.028,cy,0,'x',0.235,10);
+  add(new THREE.SphereGeometry(0.215,32,16),MAT.ss,-x0+0.125,cy,0,{sy:0.75});
+  // 管程接管（管箱顶/底）
+  nozzle('y_up',x0-0.10,cy+0.215,0,0.042,0.10,MAT.ss,0.068);
+  nozzle('y_dn',x0-0.10,cy-0.215,0,0.042,-0.10,MAT.ss,0.068);
+  // 壳程接管
+  nozzle('y_up',-0.30,cy+r,0,0.050,0.10,MAT.ss,0.078);
+  nozzle('y_dn',0.45,cy-r,0,0.050,-0.10,MAT.ss,0.078);
+  // 鞍座
+  for(const sx of[-0.55,0.55]){
+    add(box(0.06,0.36,0.40,0.01),MAT.ssDim,sx,cy-r-0.17,0,{name:'saddle'});
+    add(box(0.16,0.02,0.46,0.006),MAT.ssDim,sx,0.01,0);
+  }
+  // 吊耳
+  for(const sx of[-0.75,0.75]){
+    add(box(0.012,0.10,0.10,0.004),MAT.ss,sx,cy+r+0.03,0);
+    add(new THREE.TorusGeometry(0.024,0.008,8,16),MAT.ss,sx,cy+r+0.10,0);
+  }
+  // 排污/放空
+  nozzle('z',0,cy,0.20,0.018,0.08,MAT.ssDim,0.032);
+  plate(MAT.ss,0.30,0.22,plateTex('列管换热器 BEM400',[
+    '换热面积 12 m²','管程 / 壳程 0.6 MPa',
+    '设计温度 150 ℃','材质 S30408'],'#0e6251'),0.10,cy,0.201);
+}
+
+/* nozzle 垂直方向支持 */
+function nozzleY(x,y,z,r,len,mat,fl){
+  const c=new THREE.Mesh(cyl(r,r,len,18),mat); c.position.set(x,y+Math.sign(len)*len/2,z);
+  c.castShadow=c.receiveShadow=true; ROOT.add(c);
+  if(fl){ const f=new THREE.Mesh(cyl(fl,fl,0.016,20),mat); f.position.set(x,y+Math.sign(len)*len,z); f.castShadow=true; ROOT.add(f); }
+}
+{ // 用真正的垂直接管替换占位
+  const _o=nozzle; nozzle=function(dir,x,y,z,r,len,mat,fl){
+    if(dir==='y_up'||dir==='y_dn'){ nozzleY(x,y,z,r,len,mat,fl); return; }
+    _o(dir,x,y,z,r,len,mat,fl);
+  };
+}
 
 /* ================= 地面 ================= */
-const ground = new THREE.Mesh(new THREE.PlaneGeometry(30,30), new THREE.ShadowMaterial({ opacity:0.24 }));
-ground.rotation.x = -Math.PI/2; ground.position.y=0; ground.receiveShadow=true; scene.add(ground);
-// 接触 AO 渐变
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(40,40),new THREE.ShadowMaterial({opacity:0.24}));
+ground.rotation.x=-Math.PI/2; ground.receiveShadow=true; scene.add(ground);
 {
   const c=document.createElement('canvas'); c.width=c.height=256;
   const g=c.getContext('2d');
   const gr=g.createRadialGradient(128,128,20,128,128,126);
   gr.addColorStop(0,'rgba(30,42,60,0.34)'); gr.addColorStop(.55,'rgba(30,42,60,0.12)'); gr.addColorStop(1,'rgba(30,42,60,0)');
   g.fillStyle=gr; g.fillRect(0,0,256,256);
-  const t=new THREE.CanvasTexture(c);
-  const ao=new THREE.Mesh(new THREE.PlaneGeometry(3.4,3.0), new THREE.MeshBasicMaterial({map:t,transparent:true,depthWrite:false}));
+  const ao=new THREE.Mesh(new THREE.PlaneGeometry(5.2,5.0),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthWrite:false}));
   ao.rotation.x=-Math.PI/2; ao.position.y=0.002; scene.add(ao);
 }
 
-/* ================= 视角预设 & 交互 ================= */
-const views = {
-  hero:  { pos:[2.35,1.52,3.15], tgt:[0,0.60,0] },
-  front: { pos:[0.001,0.85,3.45], tgt:[0,0.60,0] },
-  side:  { pos:[3.45,0.85,0.55], tgt:[0,0.60,0] },
-  top:   { pos:[0.55,4.35,0.75], tgt:[0,0.35,0] },
-};
-let tween=null;
-function goView(name){
-  const v=views[name]; if(!v) return;
-  tween={ t:0, p0:camera.position.clone(), p1:new THREE.Vector3(...v.pos),
-          q0:controls.target.clone(), q1:new THREE.Vector3(...v.tgt) };
+/* ================= 模型注册表 ================= */
+const MODELS=[
+  { id:'ibc', name:'吨桶 IBC', sub:'1000L', build:buildIBC, cam:{pos:[2.35,1.52,3.15],tgt:[0,0.60,0]},
+    spec:'外形 <b>1200×1000×1160 mm</b> · 内容积 <b>1000 L</b> · HDPE 内胆 + 镀锌钢管框架 · 桶口 DN150 · 放料阀 DN50 · UN 31H1' },
+  { id:'drum', name:'闭口钢桶', sub:'200L', build:buildDrum, cam:{pos:[1.05,0.72,1.45],tgt:[0,0.44,0]},
+    spec:'外形 <b>Φ571×880 mm</b> · 内容积 <b>200 L</b> · 冷轧钢板 1.2mm 蓝色烤漆 · 双滚压箍环 · 2″+¾″ 双封闭口 · UN 1A1' },
+  { id:'vtank', name:'立式储罐', sub:'8m³', build:buildVTank, cam:{pos:[3.3,2.5,4.5],tgt:[0,1.45,0]},
+    spec:'外形 <b>Φ1600×2600 mm</b> · 有效容积 <b>8 m³</b> · 四支腿+拉撑 · 顶/侧人孔 · 液位计 · 直爬梯+安全笼 · 出料蝶阀 DN80' },
+  { id:'reactor', name:'搅拌反应釜', sub:'500L', build:buildReactor, cam:{pos:[2.7,2.1,3.5],tgt:[0,1.15,0]},
+    spec:'外形 <b>Φ1100×1500 mm</b> · 容积 <b>500 L</b> · 夹套 0.6MPa · 电机+减速机 2.2kW · 锚式搅拌 · 视镜/人孔 · 底部卸料球阀' },
+  { id:'pump', name:'离心泵机组', sub:'IH50', build:buildPump, cam:{pos:[1.55,0.95,2.05],tgt:[0,0.42,0]},
+    spec:'型号 <b>IH50-32-160</b> · 流量 12.5 m³/h · 扬程 32 m · 电机 3kW/2900rpm · 联轴器黄色护罩 · 共用底座' },
+  { id:'hx', name:'列管换热器', sub:'BEM400', build:buildHX, cam:{pos:[2.3,1.05,3.1],tgt:[0,0.55,0]},
+    spec:'型式 <b>BEM</b> · 换热面积 <b>12 m²</b> · 管/壳程 0.6MPa · 前后管箱+法兰螺栓圈 · 双鞍座 · 吊耳 · S30408' },
+];
+let current=null, currentDef=null, tween=null;
+
+function disposeModel(g){
+  g.traverse(o=>{ if(o.isMesh){ o.geometry.dispose(); } });
+  scene.remove(g);
 }
-const viewBtns={vHero:'hero',vFront:'front',vSide:'side',vTop:'top'};
-for(const [id,name] of Object.entries(viewBtns)){
-  document.getElementById(id).onclick=()=>{
-    document.querySelectorAll('#panel button').forEach(b=>b.classList.remove('on'));
-    document.getElementById(id).classList.add('on');
-    goView(name);
-  };
+function switchModel(id, keepCam=false){
+  const def=MODELS.find(m=>m.id===id); if(!def) return;
+  if(current) disposeModel(current);
+  ROOT=new THREE.Group(); ROOT.name=def.name;
+  def.build(); scene.add(ROOT);
+  current=ROOT; currentDef=def;
+  document.getElementById('spec').innerHTML=def.spec;
+  if(!keepCam){
+    tween={t:0,p0:camera.position.clone(),p1:new THREE.Vector3(...def.cam.pos),
+           q0:controls.target.clone(),q1:new THREE.Vector3(...def.cam.tgt)};
+  }
+  // 更新导航高亮
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));
 }
+// 导航 UI
+const nav=document.getElementById('nav');
+for(const m of MODELS){
+  const b=document.createElement('button');
+  b.dataset.id=m.id; b.innerHTML=`<span>${m.name}</span><small>${m.sub}</small>`;
+  b.onclick=()=>switchModel(m.id);
+  nav.appendChild(b);
+}
+
+/* ================= UI 交互 ================= */
+document.getElementById('btnRotate').classList.add('on');
 document.getElementById('btnRotate').onclick=(e)=>{
-  controls.autoRotate=!controls.autoRotate;
-  e.target.classList.toggle('on',controls.autoRotate);
+  controls.autoRotate=!controls.autoRotate; e.target.classList.toggle('on',controls.autoRotate);
 };
 let wire=false;
 document.getElementById('btnWire').onclick=(e)=>{
   wire=!wire; e.target.classList.toggle('on',wire);
-  tote.traverse(o=>{ if(o.isMesh && o.material && !o.material.map) o.material.wireframe=wire; });
+  if(current) current.traverse(o=>{ if(o.isMesh&&o.material&&!o.material.map) o.material.wireframe=wire; });
 };
 const status=document.getElementById('status');
 document.getElementById('exportBtn').onclick=()=>{
+  if(!currentDef) return;
   status.textContent='正在生成 GLB…';
-  const ex=new GLTFExporter();
-  ex.parse(tote,(buf)=>{
+  new GLTFExporter().parse(current,(buf)=>{
     const blob=new Blob([buf],{type:'model/gltf-binary'});
     const a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
-    a.download='IBC-Tote-1000L.glb';
-    a.click(); URL.revokeObjectURL(a.href);
-    status.textContent='✓ 已导出 GLB';
-    setTimeout(()=>status.textContent='',2600);
-  },(err)=>{ status.textContent='导出失败'; console.error(err); },{binary:true});
+    a.download=currentDef.id+'.glb'; a.click(); URL.revokeObjectURL(a.href);
+    status.textContent='✓ 已导出 '+currentDef.name;
+    setTimeout(()=>status.textContent='',2400);
+  },(err)=>{status.textContent='导出失败';console.error(err);},{binary:true});
 };
 
-/* ================= 渲染循环 ================= */
+/* ================= 循环 ================= */
+switchModel('ibc');
 const clock=new THREE.Clock();
 function animate(){
   requestAnimationFrame(animate);
@@ -424,15 +632,14 @@ function animate(){
     const k=1-Math.pow(1-tween.t,3);
     camera.position.lerpVectors(tween.p0,tween.p1,k);
     controls.target.lerpVectors(tween.q0,tween.q1,k);
-    if(tween.t>=1) tween=null;
+    if(tween.t>=1)tween=null;
   }
   controls.update();
   renderer.render(scene,camera);
 }
 animate();
-window.__dbg={THREE,tote,scene,camera,renderer};
+window.__dbg={THREE,scene,camera,renderer,get current(){return ROOT},MODELS,switchModel};
 window.__modelReady=true;
-
 addEventListener('resize',()=>{
   camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
   renderer.setSize(innerWidth,innerHeight);
